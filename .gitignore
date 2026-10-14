@@ -1,0 +1,29 @@
+# Frontend is maintained in a separate repository
+/frontend/
+
+# Maven build outputs
+**/target/
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Java and IDE files
+*.class
+*.log
+.idea/
+.vscode/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Local security audit output
+/secret-audit-paths.txt
+*.bak
+*.bak-*
+*.bom-backup

@@ -1,0 +1,71 @@
+server:
+  port: ${PORT:8085}
+
+spring:
+  application:
+    name: api-gateway
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "${FRONTEND_URL:http://localhost:5173}"
+              - "http://localhost:5174"
+              - "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+      routes:
+        - id: user-service
+          uri: "${USER_SERVICE_URL:http://localhost:9091}"
+          predicates:
+            - Path=/auth/**
+        - id: flight-service
+          uri: "${FLIGHT_SERVICE_URL:http://localhost:9092}"
+          predicates:
+            - Path=/api/flights/**
+          filters:
+            - PreserveHostHeader
+        - id: admin-flight-service
+          uri: "${FLIGHT_SERVICE_URL:http://localhost:9092}"
+          predicates:
+            - Path=/api/admin/flights/**
+          filters:
+            - PreserveHostHeader
+        - id: booking-service
+          uri: "${BOOKING_SERVICE_URL:http://localhost:9093}"
+          predicates:
+            - Path=/api/bookings/**
+          filters:
+            - PreserveHostHeader
+        - id: admin-booking-service
+          uri: "${BOOKING_SERVICE_URL:http://localhost:9093}"
+          predicates:
+            - Path=/api/admin/bookings/**
+          filters:
+            - PreserveHostHeader
+        - id: admin-user-service
+          uri: "${USER_SERVICE_URL:http://localhost:9091}"
+          predicates:
+            - Path=/api/admin/users/**
+          filters:
+            - PreserveHostHeader
+        - id: payment-service
+          uri: "${PAYMENT_SERVICE_URL:http://localhost:9094}"
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - PreserveHostHeader
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "${EUREKA_SERVER_URL:http://localhost:8761/eureka}"
